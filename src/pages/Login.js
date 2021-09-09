@@ -1,52 +1,44 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { withAuth } from "../providers/AuthProvider";
 
+const Login = (props) => {
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    password: ""
+  })
 
-class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: "",
-      password: ""
-    };
-  }
-
-  handleFormSubmit = event => {
+  const handleFormSubmit = event => {
     event.preventDefault();
-    const { email, password } = this.state;
-    this.props.login({
-      email, 
-      password
-    })
+    props.login(userInfo)
   };
 
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserInfo(currentInfo => ({
+      ...currentInfo,
+      [name]: value
+    }));
   };
 
-  render() {
-    const { email, password } = this.state;
-    return (
-      <form onSubmit={this.handleFormSubmit}>
-        <label>Email:</label>
-        <input
-          type="text"
-          name="email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <label>Password:</label>
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={this.handleChange}
-        />
-        <input type="submit" value="Login" />
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleFormSubmit}>
+      <label>Email:</label>
+      <input
+        type="text"
+        name="email"
+        value={userInfo.email}
+        onChange={handleChange}
+      />
+      <label>Password:</label>
+      <input
+        type="password"
+        name="password"
+        value={userInfo.password}
+        onChange={handleChange}
+      />
+      <input type="submit" value="Login" />
+    </form>
+  );
 }
 
 export default withAuth(Login);
